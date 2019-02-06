@@ -6,6 +6,8 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4",
+    "react-video-js-player": "^1.1.1",
+    "video.js": "^7.4.1",
     "webtorrent": "^0.100.0"
   },
   "scripts": {

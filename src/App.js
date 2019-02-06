@@ -2,6 +2,72 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import VideoPlayer from 'react-video-js-player';
+
+class VideoApp extends Component {
+    constructor(props) {
+      super(props);
+      this.player = {}
+      this.state = {
+          video: {
+              src: this.props.mp4file,
+              poster: "https://peertube.cpy.re/static/thumbnails/e2651856-4809-408a-99d4-b85b01fefb09.jpg"
+          }
+      }
+    }
+
+    onPlayerReady(player){
+        // console.log("Player is ready: ", player);
+        // this.player = player;
+    }
+
+    onVideoPlay(duration){
+        // console.log("Video played at: ", duration);
+    }
+
+    onVideoPause(duration){
+        // console.log("Video paused at: ", duration);
+    }
+
+    onVideoTimeUpdate(duration){
+        // console.log("Time updated: ", duration);
+    }
+
+    onVideoSeeking(duration){
+        // console.log("Video seeking: ", duration);
+    }
+
+    onVideoSeeked(from, to){
+        // console.log(`Video seeked from ${from} to ${to}`);
+    }
+
+    onVideoEnd(){
+        // console.log("Video ended");
+    }
+
+    render() {
+        return (
+            <div>
+                <VideoPlayer
+                    controls={true}
+                    src={this.state.video.src}
+                    poster={this.state.video.poster}
+                    width="720"
+                    height="420"
+                    onReady={this.onPlayerReady.bind(this)}
+                    onPlay={this.onVideoPlay.bind(this)}
+                    onPause={this.onVideoPause.bind(this)}
+                    onTimeUpdate={this.onVideoTimeUpdate.bind(this)}
+                    onSeeking={this.onVideoSeeking.bind(this)}
+                    onSeeked={this.onVideoSeeked.bind(this)}
+                    onEnd={this.onVideoEnd.bind(this)}
+                />
+            </div>
+        );
+    }
+}
+
+
 
 class App extends Component {
   state = {
@@ -9,7 +75,8 @@ class App extends Component {
     torrentMagnetURI: "",
     torrentName: "",
     torrentProgress: "",
-    torrentFiles: []
+    torrentFiles: [],
+    mp4file:{}
   }
 
   componentDidMount() {
@@ -40,17 +107,29 @@ class App extends Component {
         torrentFiles: torrent.files
       });
 
+      var mp4File = this.state.torrentFiles.find(function (file) {
+        return file.name.endsWith('.mp4');
+        
+      });
+
+      this.setState({mp4file:mp4File.path});
+
+      console.log(mp4File.path);
+
       // TODO Figure out a better way to render these files 
       this.state.torrentFiles.map((file, i) => {
         file.appendTo('body');
+        // console.log(file);
       })
 
     });
   }
 
   render() {
+    const mp4file = this.state.mp4file;
     return (
       <div>
+        <VideoApp mp4file={mp4file} />
         <h1>{this.state.torrentName}</h1>
         <p><b>Torrent Info Hash: </b>{this.state.torrentInfoHash}</p>
         <p><b>Torrent Progress: </b>{this.state.torrentProgress}</p>
